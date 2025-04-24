@@ -1,6 +1,9 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css'; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,6 +25,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    positionClass: 'toast-top-right', 
+    timeOut: 5000, 
+  };
+
   return (
     <html lang="en">
       <body
