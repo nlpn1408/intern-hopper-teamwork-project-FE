@@ -1,0 +1,24 @@
+{
+  "users": [
+    {
+      "id": "338b",
+      "email": "thanhtu.26122004@gmail.com",
+      "username": "Nguyễn Văn A",
+      "password": "h@hhhhH12",
+      "role_id": 1,
+      "createdAt": "2025-04-24T09:32:07.378Z",
+      "updatedAt": "2025-04-24T09:32:07.378Z",
+      "deleted": false
+    },
+    {
+      "id": "7ee0",
+      "email": "thanhu.26122004@gmail.com",
+      "username": "Nguyễn Văn A",
+      "password": "Ttttttt@12",
+      "role_id": 1,
+      "createdAt": "2025-04-24T09:34:07.704Z",
+      "updatedAt": "2025-04-24T09:34:07.704Z",
+      "deleted": false
+    }
+  ]
+}
