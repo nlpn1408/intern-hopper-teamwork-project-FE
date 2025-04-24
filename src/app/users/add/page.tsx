@@ -87,8 +87,8 @@ export default function UserCreationForm() {
 
     if (!formData.password) {
       newErrors.password = 'Mật khẩu không được để trống';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự';
     } else if (!/[A-Z]/.test(formData.password)) {
       newErrors.password = 'Mật khẩu phải chứa ít nhất một chữ cái viết hoa';
     } else if (!/[a-z]/.test(formData.password)) {
@@ -113,7 +113,7 @@ export default function UserCreationForm() {
 
     if (validateForm()) {
       try {
-        const emailCheckResponse = await fetch(`http://localhost:3001/user?email=${formData.email}`);
+        const emailCheckResponse = await fetch(`http://localhost:3001/get_users?email=${formData.email}`);
         const emailCheckData = await emailCheckResponse.json();
 
         if (emailCheckData.length > 0) {
