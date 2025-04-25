@@ -1,7 +1,6 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
 
 export type RegisterData = {
   username: string;
@@ -12,70 +11,42 @@ export type RegisterData = {
 
 type RegisterFormProps = {
   onSubmit: (data: RegisterData) => void;
-  onSuccess: () => void;
-  onError: (error: Error) => void;
+  isSubmitting: boolean;
 };
 
-export default function RegisterForm({ onSubmit, onSuccess, onError }: RegisterFormProps) {
+export default function RegisterForm({ onSubmit, isSubmitting }: RegisterFormProps) {
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitSuccessful },
-    reset,
+    formState: { errors },
   } = useForm<RegisterData>();
 
   const password = watch('password');
 
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      onSuccess();
-      reset();
-    }
-  }, [isSubmitSuccessful, reset, onSuccess]);
-
-  const [loading, setLoading] = useState(false); 
-
-  const onSubmitForm = async (data: RegisterData) => {
-    setLoading(true); 
-    try {
-      await onSubmit(data); 
-    } catch (error: unknown) {
-      console.error(error);
-      if (error instanceof Error) {
-        onError(error); 
-      } else {   
-        onError(new Error('Đã xảy ra lỗi không xác định'));
-      }
-    } finally {
-      setLoading(false); 
-    }
+  const onSubmitForm = (data: RegisterData) => {
+    onSubmit(data);
   };
-  
-  
 
   return (
     <form
-    onSubmit={handleSubmit(onSubmitForm)}
-    className=" max-w-11/12 lg:max-w-md md:max-w-md mx-auto bg-white p-10 rounded-xl shadow-md"
-  > 
+      onSubmit={handleSubmit(onSubmitForm)}
+      className="max-w-11/12 lg:max-w-md md:max-w-md mx-auto bg-white p-10 rounded-xl shadow-md"
+    >
       <h1 className="text-2xl font-bold text-center mb-6">ĐĂNG KÍ TÀI KHOẢN</h1>
+
       <div className="w-full mx-auto">
-        {/* <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Tên</label> */}
         <input
           {...register('username', { required: 'Vui lòng nhập tên' })}
-          className="w-full lg:mt-1 p-1 lg:px-4 lg:py-2 md:p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Họ và tên"
         />
-        {errors.username ? (
+        {errors.username && (
           <p className="text-red-500 text-sm">{errors.username.message}</p>
-        ) : (
-          <p className="invisible text-sm">placeholder</p>
         )}
       </div>
 
-      <div className="w-full mx-auto">
-        {/* <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Email</label> */}
+      <div className="w-full mx-auto mt-3">
         <input
           {...register('email', {
             required: 'Vui lòng nhập email',
@@ -84,18 +55,15 @@ export default function RegisterForm({ onSubmit, onSuccess, onError }: RegisterF
               message: 'Email không hợp lệ',
             },
           })}
-          className="w-full lg:mt-1 p-1 lg:px-4 lg:py-2 md:p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Email"
         />
-        {errors.email ? (
+        {errors.email && (
           <p className="text-red-500 text-sm">{errors.email.message}</p>
-        ) : (
-          <p className="invisible text-sm">placeholder</p>
         )}
       </div>
 
-      <div className="w-full mx-auto">
-        {/* <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Mật khẩu</label> */}
+      <div className="w-full mx-auto mt-3">
         <input
           type="password"
           {...register('password', {
@@ -117,18 +85,15 @@ export default function RegisterForm({ onSubmit, onSuccess, onError }: RegisterF
               return true;
             },
           })}
-          className="w-full lg:mt-1 p-1 lg:px-4 lg:py-2 md:p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Mật khẩu"
         />
-        {errors.password ? (
+        {errors.password && (
           <p className="text-red-500 text-sm">{errors.password.message}</p>
-        ) : (
-          <p className="invisible text-sm">placeholder</p>
         )}
       </div>
 
-      <div className="w-full mx-auto">
-        {/* <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Xác nhận mật khẩu</label> */}
+      <div className="w-full mx-auto mt-3">
         <input
           type="password"
           {...register('confirmPassword', {
@@ -136,46 +101,46 @@ export default function RegisterForm({ onSubmit, onSuccess, onError }: RegisterF
             validate: (value) =>
               value === password || 'Mật khẩu xác nhận không khớp',
           })}
-          className="w-full lg:mt-1 p-1 lg:px-4 lg:py-2 md:p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Xác nhận mật khẩu"
         />
-        {errors.confirmPassword ? (
+        {errors.confirmPassword && (
           <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
-        ) : (
-          <p className="invisible text-sm">placeholder</p>
         )}
-      
-      </div>
-      
-
-      <div className="flex justify-center">
-      <button
-        type="submit"
-        className="w-full font-bold mt-2 py-2 lg:mt-3 bg-blue-600 text-white lg:py-3 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        disabled={loading} 
-      >
-        {loading ? (
-          <span>Đang đăng kí...</span>
-        ) : (
-          <span>ĐĂNG KÍ</span>
-        )}
-      </button>
-
-      </div>
-      <div className="text-center mt-4 text-sm">
-        <p className="text-gray-600">
-          Bạn đã có tài khoản?{' '}
-          <a href="/login" className="text-blue-600 underline">
-            Đăng nhập ngay
-          </a>
-        </p>
-        <p className="mt-1 text-gray-600">
-          <a href="/forgot-password" className="text-blue-600 underline">
-            Quên mật khẩu? Khôi phục mật khẩu
-          </a>
-        </p>
       </div>
 
+      <div className="text-xs text-gray-500 mt-4">
+        This site is protected by reCAPTCHA and the Google{' '}
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+          Privacy Policy
+        </a>{' '}
+        and{' '}
+        <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+          Terms of Service
+        </a>{' '}
+        apply.
+      </div>
+
+      <div className="flex justify-center mt-6">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full font-bold py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+        >
+          {isSubmitting ? 'Đang đăng ký...' : 'ĐĂNG KÍ'}
+        </button>
+      </div>
+
+      <div className="text-center mt-4 text-sm text-gray-600">
+        Bạn đã có tài khoản?{' '}
+        <a href="/login" className="text-blue-600 underline">
+          Đăng nhập ngay
+        </a>
+        <br />
+        <a href="/forgot-password" className="text-blue-600 underline">
+          Quên mật khẩu? Khôi phục mật khẩu
+        </a>
+      </div>
     </form>
   );
 }
