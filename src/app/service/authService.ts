@@ -27,33 +27,43 @@ const API_URL = 'http://localhost:3001/api/auth/register';
 export const registerUser = async (data: RegisterData): Promise<RegisterResponse> => {
   try {
     const response = await axios.post<RegisterResponse>(API_URL, data); 
-
-    return {
-      success: true,
-      message: response.data.message,
-      data: response.data.data,
-    };
-
-  } catch (error: any) {
-    const status = error.response?.status;
-    const errorData = error.response?.data as RegisterResponse;
-    if (status === 409) {
+    console.log(response);
+    
+    if (response.data?.message === 'Tạo tài khoản thành công') {
       return {
-        success: false,
-        message: errorData?.message || 'Email đã được sử dụng',
+        success: true,
+        message: response.data.message,
+        data: response.data.data, 
       };
     }
-    if (status === 400) {
+
+    if (response.data?.message === 'Email đã được sử dụng') {
       return {
         success: false,
-        message: errorData?.message || 'Dữ liệu không hợp lệ',
-        errors: errorData.errors || {},
+        message: 'Email đã được sử dụng',
+      };
+    }
+
+    if (response.data?.message === 'Dữ liệu không hợp lệ') {
+      return {
+        success: false,
+        message: 'Dữ liệu không hợp lệ',
+        errors: response.data.errors || {},
       };
     }
 
     return {
       success: false,
-      message: 'Có lỗi xảy ra khi đăng ký',
+      message: 'Đăng ký không thành công',
+    };
+  } catch (error: any) {
+    const errorData = error.response?.data as RegisterResponse;
+    const errorMessage = errorData?.message || 'Có lỗi xảy ra khi đăng ký';
+
+    return {
+      success: false,
+      message: errorMessage,
+      errors: errorData.errors || {},
     };
   }
 };
