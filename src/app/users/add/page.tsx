@@ -21,7 +21,7 @@ interface FormErrors {
 }
 
 const roleOptions = [
-  { id: 0, name: 'Admin' },
+  { id: 2, name: 'Admin' },
   { id: 1, name: 'User' },
 ];
 
@@ -33,7 +33,7 @@ export default function UserCreationForm() {
     username: '',
     password: '',
     confirmPassword: '',
-    role_id: '0',
+    role_id: '1',
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -44,13 +44,13 @@ export default function UserCreationForm() {
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Kiểm tra token khi component được mount
+  
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      setShowModal(true); // Hiển thị modal nếu không có token
+      setShowModal(true); 
       setTimeout(() => {
-        router.push('/login'); // Chuyển hướng đến trang đăng nhập sau 3 giây
+        router.push('/login');
       }, 3000);
     }
   }, [router]);
@@ -200,7 +200,9 @@ export default function UserCreationForm() {
             className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
-            <span>Quay lại danh sách người dùng</span>
+            <a href="/users">
+    <span>Quay lại danh sách người dùng</span>
+  </a>
           </button>
         </div>
 

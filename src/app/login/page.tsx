@@ -36,14 +36,20 @@ const LoginPage = () => {
       }
 
       const data = await response.json();
+
+      // Kiểm tra dữ liệu trả về
+      if (!data || !data.data || !data.data.accessToken) {
+        throw new Error("Dữ liệu trả về không hợp lệ");
+      }
+
       const { accessToken } = data.data;
 
       localStorage.setItem("token", accessToken);
-      toast.success(" Đăng nhập thành công!");
+      toast.success("Đăng nhập thành công!");
 
       router.push("/");
     } catch (error: any) {
-      setError(error.message);
+      setError(error.message || "Đã xảy ra lỗi không xác định");
     } finally {
       setLoading(false);
     }
@@ -105,4 +111,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage
+export default LoginPage;
