@@ -8,16 +8,16 @@ import { registerUser } from '../service/authService';
 
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
-
   const handleRegister = async (data: RegisterData) => {
-    setLoading(true);
+    setLoading(true); 
     try {
       const result = await registerUser(data); 
 
       if (result.success) {
         toastr.success('Đăng ký thành công!'); 
       } else {
-        toastr.error(result.message || 'Đăng ký không thành công'); 
+        toastr.error(result.message || 'Đăng ký không thành công');
+        
         if (result.errors) {
           if (result.errors.email) {
             toastr.error(result.errors.email.join(', '));
@@ -32,9 +32,9 @@ export default function RegisterPage() {
       }
     } catch (error) {
       console.error(error);
-      toastr.error('Đăng ký thất bại'); 
+      toastr.error('Đăng ký thất bại');
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
 
