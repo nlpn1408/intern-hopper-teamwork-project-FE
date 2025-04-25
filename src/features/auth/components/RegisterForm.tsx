@@ -6,6 +6,7 @@ import { registerUser } from "../services/auth.service";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toastr from 'toastr';
+import PasswordInput from "../../../components/common/PasswordInput"; // Import the new component
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -82,9 +83,12 @@ export default function RegisterForm() {
       </div>
 
       <div className="w-full mx-auto mt-3">
-        <input
-          type="password"
-          {...register("password", {
+        <PasswordInput
+          placeholder="Mật khẩu"
+          register={register}
+          name="password"
+          error={errors.password?.message}
+          rules={{
             required: "Vui lòng nhập mật khẩu",
             minLength: {
               value: 8,
@@ -105,31 +109,22 @@ export default function RegisterForm() {
               }
               return true;
             },
-          })}
-          className="w-full p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Mật khẩu"
+          }}
         />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
-        )}
       </div>
 
       <div className="w-full mx-auto mt-3">
-        <input
-          type="password"
-          {...register("confirmPassword", {
+         <PasswordInput
+          placeholder="Xác nhận mật khẩu"
+          register={register}
+          name="confirmPassword"
+          error={errors.confirmPassword?.message}
+          rules={{
             required: "Vui lòng xác nhận mật khẩu",
             validate: (value) =>
               value === password || "Mật khẩu xác nhận không khớp",
-          })}
-          className="w-full p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Xác nhận mật khẩu"
+          }}
         />
-        {errors.confirmPassword && (
-          <p className="text-red-500 text-sm">
-            {errors.confirmPassword.message}
-          </p>
-        )}
       </div>
 
       <div className="text-xs text-gray-500 mt-4">
