@@ -6,7 +6,6 @@ import 'toastr/build/toastr.min.css';
 import RegisterForm, { RegisterData } from '../components/register/RegisterForm';
 import { registerUser } from '../service/authService';
 
-
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
 
@@ -16,13 +15,24 @@ export default function RegisterPage() {
       const result = await registerUser(data); 
 
       if (result.success) {
-        toastr.success('Đăng ký thành công!');
+        toastr.success('Đăng ký thành công!'); 
       } else {
-        toastr.error(result.message || 'Đăng ký không thành công');
+        toastr.error(result.message || 'Đăng ký không thành công'); 
+        if (result.errors) {
+          if (result.errors.email) {
+            toastr.error(result.errors.email.join(', '));
+          }
+          if (result.errors.password) {
+            toastr.error(result.errors.password.join(', '));
+          }
+          if (result.errors.username) {
+            toastr.error(result.errors.username.join(', '));
+          }
+        }
       }
     } catch (error) {
       console.error(error);
-      toastr.error('Đăng ký thất bại');
+      toastr.error('Đăng ký thất bại'); 
     } finally {
       setLoading(false);
     }
@@ -43,7 +53,7 @@ export default function RegisterPage() {
       {/* Form đăng ký */}
       <div className="relative w-full">
         <RegisterForm onSubmit={handleRegister} />
-        {loading && <p>Đang xử lý...</p>}
+        {loading && <p>Đang xử lý...</p>} 
       </div>
     </div>
   );
