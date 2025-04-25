@@ -7,14 +7,14 @@ import RegisterForm, { RegisterData } from '../components/register/RegisterForm'
 import { registerUser } from '../service/authService';
 
 export default function RegisterPage() {
-  const [loading, setLoading] = useState(false);
-  const handleRegister = async (data: RegisterData) => {
-    setLoading(true); 
-    try {
-      const result = await registerUser(data); 
 
+  const handleRegister = async (data: RegisterData) => {
+    try {
+      const result = await registerUser(data);
+      console.log(data);
+      
       if (result.success) {
-        toastr.success('Đăng ký thành công!'); 
+        toastr.success('Đăng ký thành công!');
       } else {
         toastr.error(result.message || 'Đăng ký không thành công');
         
@@ -33,9 +33,15 @@ export default function RegisterPage() {
     } catch (error) {
       console.error(error);
       toastr.error('Đăng ký thất bại');
-    } finally {
-      setLoading(false); 
     }
+  };
+
+  const onSuccess = () => {
+    console.log('Đăng ký thành công');
+  };
+
+  const onError = () => {
+    console.log('Có lỗi xảy ra');
   };
 
   return (
@@ -52,8 +58,11 @@ export default function RegisterPage() {
       
       {/* Form đăng ký */}
       <div className="relative w-full">
-        <RegisterForm onSubmit={handleRegister} />
-        {loading && <p>Đang xử lý...</p>} 
+        <RegisterForm 
+          onSubmit={handleRegister} 
+          onSuccess={onSuccess} 
+          onError={onError} 
+        />
       </div>
     </div>
   );

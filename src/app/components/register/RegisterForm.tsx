@@ -1,9 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { useEffect } from 'react';
-import toastr from 'toastr';
-import 'toastr/build/toastr.min.css';
+import { useEffect, useState } from 'react';
 
 export type RegisterData = {
   username: string;
@@ -14,9 +12,11 @@ export type RegisterData = {
 
 type RegisterFormProps = {
   onSubmit: (data: RegisterData) => void;
+  onSuccess: () => void;
+  onError: (error: Error) => void;
 };
 
-export default function RegisterForm({ onSubmit }: RegisterFormProps) {
+export default function RegisterForm({ onSubmit, onSuccess, onError }: RegisterFormProps) {
   const {
     register,
     handleSubmit,
@@ -29,19 +29,30 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      toastr.success('Đăng ký thành công');
+      onSuccess();
       reset();
     }
-  }, [isSubmitSuccessful, reset]);
+  }, [isSubmitSuccessful, reset, onSuccess]);
 
-  const onSubmitForm = (data: RegisterData) => {
+  const [loading, setLoading] = useState(false); 
+
+  const onSubmitForm = async (data: RegisterData) => {
+    setLoading(true); 
     try {
-      onSubmit(data);
-    } catch (error) {
+      await onSubmit(data); 
+    } catch (error: unknown) {
       console.error(error);
-      toastr.error('Đăng ký thất bại');
+      if (error instanceof Error) {
+        onError(error); 
+      } else {   
+        onError(new Error('Đã xảy ra lỗi không xác định'));
+      }
+    } finally {
+      setLoading(false); 
     }
   };
+  
+  
 
   return (
     <form
@@ -150,12 +161,18 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
       
 
       <div className="flex justify-center">
-        <button
-          type="submit"
-          className="w-full font-bold mt-2 py-2 lg:mt-3 bg-blue-600 text-white lg:py-3 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          ĐĂNG KÍ
-        </button>
+      <button
+        type="submit"
+        className="w-full font-bold mt-2 py-2 lg:mt-3 bg-blue-600 text-white lg:py-3 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        disabled={loading} 
+      >
+        {loading ? (
+          <span>Đang đăng kí...</span>
+        ) : (
+          <span>ĐĂNG KÍ</span>
+        )}
+      </button>
+
       </div>
       <div className="text-center mt-4 text-sm">
         <p className="text-gray-600">
