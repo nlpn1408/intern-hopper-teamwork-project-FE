@@ -6,7 +6,7 @@ import { registerUser } from "../services/auth.service";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toastr from 'toastr';
-import PasswordInput from "../../../components/common/PasswordInput"; // Import the new component
+import PasswordInput from "../../../components/common/PasswordInput";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -31,7 +31,6 @@ export default function RegisterForm() {
       } else {
         toastr.error(result.message || "Đăng ký không thành công");
         if (result.errors) {
-          // Iterate through errors and display them
           Object.values(result.errors).forEach((errorMessages) => {
             errorMessages.forEach((errorMessage) => {
               toastr.error(errorMessage);
