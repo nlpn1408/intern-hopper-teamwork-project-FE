@@ -1,10 +1,9 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { LoginForm as LoginFormType } from "../types"; // Alias LoginForm to avoid naming conflict
-import Input from "@/components/common/Input"; // Assuming Input component exists
-import PasswordInput from "@/components/common/PasswordInput"; // Assuming PasswordInput component exists
-
+import { LoginForm as LoginFormType } from "../types";
+import Input from "@/components/common/Input"; 
+import PasswordInput from "@/components/common/PasswordInput";
 type LoginFormProps = {
   onSubmit: (data: LoginFormType) => void;
   isSubmitting: boolean;
@@ -50,7 +49,7 @@ export default function LoginForm({ onSubmit, isSubmitting }: LoginFormProps) {
           rules={{
             required: "Vui lòng nhập mật khẩu",
             minLength: {
-              value: 6, // Adjust minLength as needed
+              value: 6,
               message: "Mật khẩu phải có ít nhất 6 ký tự",
             },
           }}
