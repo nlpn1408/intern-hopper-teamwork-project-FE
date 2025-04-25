@@ -5,9 +5,11 @@ import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
 import RegisterForm, { RegisterData } from '../components/register/RegisterForm';
 import { registerUser } from '../service/authService';
+import { useRouter } from 'next/navigation';
 
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async (data: RegisterData) => {
@@ -17,6 +19,7 @@ export default function RegisterPage() {
 
       if (result.success) {
         toastr.success('Đăng ký thành công!');
+        router.push('/login'); 
       } else {
         toastr.error(result.message || 'Đăng ký không thành công');
       }

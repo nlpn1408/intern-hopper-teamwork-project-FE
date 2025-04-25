@@ -6,7 +6,7 @@ interface RegisterResponse {
   message?: string;
 }
 
-const API_URL = '/api/register';
+const API_URL = 'http://localhost:3003/api/auth/register';
 
 export const registerUser = async (data: RegisterData): Promise<RegisterResponse> => {
   try {
