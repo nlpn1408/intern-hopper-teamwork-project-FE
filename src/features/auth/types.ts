@@ -10,6 +10,18 @@ export interface RegisterData {
   confirmPassword: string;
 }
 
+export interface LoginForm {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  data?: {
+    accessToken?: string;
+  };
+  message?: string;
+}
+
 export interface RegisterResponse {
   success: boolean;
   message: string;
