@@ -9,15 +9,14 @@ import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
   const handleRegister = async (data: RegisterData) => {
-    setLoading(true);
     try {
       const result = await registerUser(data); 
-
-      if (result.success) {
+      console.log(result);
+      
+      if (result.success === true) {
         toastr.success('Đăng ký thành công!'); 
+        router.push('/login'); 
       } else {
         toastr.error(result.message || 'Đăng ký không thành công'); 
         if (result.errors) {
@@ -35,9 +34,7 @@ export default function RegisterPage() {
     } catch (error) {
       console.error(error);
       toastr.error('Đăng ký thất bại'); 
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   return (
@@ -55,7 +52,6 @@ export default function RegisterPage() {
       {/* Form đăng ký */}
       <div className="relative w-full">
         <RegisterForm onSubmit={handleRegister} />
-        {loading && <p>Đang xử lý...</p>} 
       </div>
     </div>
   );

@@ -24,33 +24,16 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
     formState: { errors, isSubmitSuccessful },
     reset,
   } = useForm<RegisterData>();
-
   const password = watch('password');
-
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      toastr.success('Đăng ký thành công');
-      reset();
-    }
-  }, [isSubmitSuccessful, reset]);
-
   const onSubmitForm = (data: RegisterData) => {
-    try {
-      onSubmit(data);
-    } catch (error) {
-      console.error(error);
-      toastr.error('Đăng ký thất bại');
-    }
+    onSubmit(data);
   };
-
   return (
     <form
     onSubmit={handleSubmit(onSubmitForm)}
     className=" max-w-11/12 lg:max-w-md md:max-w-md mx-auto bg-white p-10 rounded-xl shadow-md"
   > 
-      <h1 className="text-2xl font-bold text-center">ĐĂNG KÍ TÀI KHOẢN</h1>
-      <p className="text-sm text-center my-4 text-gray-600">Đăng kí tài khoản của bạn</p>
-
+      <h1 className="text-2xl font-bold text-center mb-6">ĐĂNG KÍ TÀI KHOẢN</h1>
       <div className="w-full mx-auto">
         {/* <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Tên</label> */}
         <input
@@ -135,17 +118,7 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
         ) : (
           <p className="invisible text-sm">placeholder</p>
         )}
-        <div className="text-xs text-gray-500 mt-4">
-          This site is protected by reCAPTCHA and the Google{' '}
-          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-            Privacy Policy
-          </a>{' '}
-          and{' '}
-          <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-            Terms of Service
-          </a>{' '}
-          apply.
-        </div>
+      
       </div>
       
 
@@ -162,11 +135,6 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
           Bạn đã có tài khoản?{' '}
           <a href="/login" className="text-blue-600 underline">
             Đăng nhập ngay
-          </a>
-        </p>
-        <p className="mt-1 text-gray-600">
-          <a href="/forgot-password" className="text-blue-600 underline">
-            Quên mật khẩu? Khôi phục mật khẩu
           </a>
         </p>
       </div>

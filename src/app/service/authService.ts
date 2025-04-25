@@ -9,6 +9,17 @@ interface RegisterResponse {
     password?: string[];
     username?: string[];
   };
+  data?: {
+    id: number;
+    username: string;
+    email: string;
+    password: string;
+    role_id: number;
+    status: boolean;
+    createdAt: string;
+    updatedAt: string;
+    deleted: boolean;
+  };
 }
 
 const API_URL = 'http://localhost:3001/api/auth/register';
@@ -17,33 +28,25 @@ export const registerUser = async (data: RegisterData): Promise<RegisterResponse
   try {
     const response = await axios.post<RegisterResponse>(API_URL, data); 
 
-    if (response.data?.message === 'Tạo tài khoản thành công') {
-      return {
-        success: true,
-        message: response.data.message,
-      };
-    }
-
     return {
-      success: false,
-      message: 'Đăng ký không thành công',
+      success: true,
+      message: response.data.message,
+      data: response.data.data,
     };
+
   } catch (error: any) {
+    const status = error.response?.status;
     const errorData = error.response?.data as RegisterResponse;
-
-    const errorMessage = errorData?.message;
-
-    if (errorMessage === 'Email đã được sử dụng') {
+    if (status === 409) {
       return {
         success: false,
-        message: errorMessage,
+        message: errorData?.message || 'Email đã được sử dụng',
       };
     }
-
-    if (errorMessage === 'Dữ liệu không hợp lệ') {
+    if (status === 400) {
       return {
         success: false,
-        message: errorMessage,
+        message: errorData?.message || 'Dữ liệu không hợp lệ',
         errors: errorData.errors || {},
       };
     }
