@@ -1,6 +1,4 @@
-import Image from "next/image";
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
@@ -13,7 +11,9 @@ const LoginPage = () => {
 
   const router = useRouter();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault(); // chặn reload
+
     if (!email || !password) {
       setError("Vui lòng nhập đầy đủ thông tin");
       return;
@@ -40,7 +40,7 @@ const LoginPage = () => {
       const { accessToken } = data.data;
 
       localStorage.setItem("token", accessToken);
-      toast.success(" Đăng nhập thành công!");
+      toast.success("🎉 Đăng nhập thành công!");
 
       router.push("/");
     } catch (error: any) {
@@ -52,7 +52,6 @@ const LoginPage = () => {
 
   return (
     <>
-      Login
       <Toaster position="top-center" reverseOrder={false} />
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100">
         <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8">
@@ -61,13 +60,14 @@ const LoginPage = () => {
 
           {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
-          <div className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
             <input
               type="password"
@@ -75,10 +75,11 @@ const LoginPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
 
             <button
-              onClick={handleLogin}
+              type="submit"
               disabled={loading}
               className={`w-full py-2 rounded-xl font-semibold transition ${
                 loading
@@ -88,7 +89,7 @@ const LoginPage = () => {
             >
               {loading ? "⏳ Đang đăng nhập..." : "ĐĂNG NHẬP"}
             </button>
-          </div>
+          </form>
 
           <div className="mt-6 text-center text-sm text-gray-500 space-y-2">
             <a href="/dangky" className="hover:underline text-blue-600">
@@ -104,4 +105,7 @@ const LoginPage = () => {
         </div>
       </div>
     </>
-)};
+  );
+};
+
+export default LoginPage;
