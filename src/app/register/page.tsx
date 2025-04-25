@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-
 import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
 import RegisterForm, { RegisterData } from '../components/register/RegisterForm';
+import { registerUser } from '../service/authService';
+
 
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
@@ -12,19 +13,7 @@ export default function RegisterPage() {
   const handleRegister = async (data: RegisterData) => {
     setLoading(true);
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Đăng ký thất bại');
-      }
-
-      const result = await response.json();
+      const result = await registerUser(data); 
 
       if (result.success) {
         toastr.success('Đăng ký thành công!');

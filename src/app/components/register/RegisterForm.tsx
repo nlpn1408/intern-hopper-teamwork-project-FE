@@ -6,7 +6,7 @@ import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
 
 export type RegisterData = {
-  name: string;
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -46,25 +46,27 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
   return (
     <form
     onSubmit={handleSubmit(onSubmitForm)}
-    className="space-y-2 w-11/12 sm:max-w-10/12 md:max-w-9/12 lg:max-w-8/12 xl:max-w-4/12 mx-auto bg-white py-10 px-6 rounded-lg shadow-md"
+    className=" max-w-11/12 lg:max-w-md md:max-w-md mx-auto bg-white p-10 rounded-xl shadow-md"
   > 
-      <h1 className="text-2xl font-bold mb-4 text-center">Đăng ký tài khoản</h1>
+      <h1 className="text-2xl font-bold text-center">ĐĂNG KÍ TÀI KHOẢN</h1>
+      <p className="text-sm text-center my-4 text-gray-600">Đăng kí tài khoản của bạn</p>
 
-      <div className="w-full md:w-10/12 lg:w-10/12 mx-auto">
-        <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Tên</label>
+      <div className="w-full mx-auto">
+        {/* <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Tên</label> */}
         <input
-          {...register('name', { required: 'Vui lòng nhập tên' })}
-          className="w-full lg:mt-2 p-1 lg:p-3 md:p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          {...register('username', { required: 'Vui lòng nhập tên' })}
+          className="w-full lg:mt-1 p-1 lg:px-4 lg:py-2 md:p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Họ và tên"
         />
-        {errors.name ? (
-          <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.name.message}</p>
+        {errors.username ? (
+          <p className="text-red-500 text-sm">{errors.username.message}</p>
         ) : (
-          <p className="invisible text-sm min-h-[1.25rem]">placeholder</p>
+          <p className="invisible text-sm">placeholder</p>
         )}
       </div>
 
-      <div className="w-full md:w-10/12 lg:w-10/12 mx-auto">
-        <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Email</label>
+      <div className="w-full mx-auto">
+        {/* <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Email</label> */}
         <input
           {...register('email', {
             required: 'Vui lòng nhập email',
@@ -73,17 +75,18 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
               message: 'Email không hợp lệ',
             },
           })}
-          className="w-full lg:mt-2 p-1 lg:p-3 md:p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full lg:mt-1 p-1 lg:px-4 lg:py-2 md:p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Email"
         />
         {errors.email ? (
-          <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.email.message}</p>
+          <p className="text-red-500 text-sm">{errors.email.message}</p>
         ) : (
-          <p className="invisible text-sm min-h-[1.25rem]">placeholder</p>
+          <p className="invisible text-sm">placeholder</p>
         )}
       </div>
 
-      <div className="w-full md:w-10/12 lg:w-10/12 mx-auto">
-        <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Mật khẩu</label>
+      <div className="w-full mx-auto">
+        {/* <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Mật khẩu</label> */}
         <input
           type="password"
           {...register('password', {
@@ -105,17 +108,18 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
               return true;
             },
           })}
-          className="w-full lg:mt-2 p-1 lg:p-3 md:p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full lg:mt-1 p-1 lg:px-4 lg:py-2 md:p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Mật khẩu"
         />
         {errors.password ? (
-          <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.password.message}</p>
+          <p className="text-red-500 text-sm">{errors.password.message}</p>
         ) : (
-          <p className="invisible text-sm min-h-[1.25rem]">placeholder</p>
+          <p className="invisible text-sm">placeholder</p>
         )}
       </div>
 
-      <div className="w-full md:w-10/12 lg:w-10/12 mx-auto">
-        <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Xác nhận mật khẩu</label>
+      <div className="w-full mx-auto">
+        {/* <label className="block text-sm md:text-lg lg:text-lg font-medium text-gray-700">Xác nhận mật khẩu</label> */}
         <input
           type="password"
           {...register('confirmPassword', {
@@ -123,22 +127,48 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
             validate: (value) =>
               value === password || 'Mật khẩu xác nhận không khớp',
           })}
-          className="w-full lg:mt-2 p-1 lg:p-3 md:p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full lg:mt-1 p-1 lg:px-4 lg:py-2 md:p-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Xác nhận mật khẩu"
         />
         {errors.confirmPassword ? (
-          <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.confirmPassword.message}</p>
+          <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
         ) : (
-          <p className="invisible text-sm min-h-[1.25rem]">placeholder</p>
+          <p className="invisible text-sm">placeholder</p>
         )}
+        <div className="text-xs text-gray-500 mt-4">
+          This site is protected by reCAPTCHA and the Google{' '}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+            Privacy Policy
+          </a>{' '}
+          and{' '}
+          <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+            Terms of Service
+          </a>{' '}
+          apply.
+        </div>
       </div>
+      
 
       <div className="flex justify-center">
         <button
           type="submit"
-          className="w-full mt-2 py-2 lg:mt-3 md:w-10/12 lg:w-10/12 bg-blue-600 text-white lg:py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full font-bold mt-2 py-2 lg:mt-3 bg-blue-600 text-white lg:py-3 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          Đăng ký
+          ĐĂNG KÍ
         </button>
+      </div>
+      <div className="text-center mt-4 text-sm">
+        <p className="text-gray-600">
+          Bạn đã có tài khoản?{' '}
+          <a href="/login" className="text-blue-600 underline">
+            Đăng nhập ngay
+          </a>
+        </p>
+        <p className="mt-1 text-gray-600">
+          <a href="/forgot-password" className="text-blue-600 underline">
+            Quên mật khẩu? Khôi phục mật khẩu
+          </a>
+        </p>
       </div>
 
     </form>
