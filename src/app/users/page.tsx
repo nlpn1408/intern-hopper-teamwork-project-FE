@@ -5,8 +5,8 @@ import Form from 'next/form';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 import React, { Usable, useEffect, useState } from 'react';
-import { fetchUsers } from '@/services/api';
-import { User } from '@/type';
+import { User } from '@/features/user/types';
+import { fetchUsers } from '@/features/user/services/user.service';
 
 type SearchParams = {
   query: string;
