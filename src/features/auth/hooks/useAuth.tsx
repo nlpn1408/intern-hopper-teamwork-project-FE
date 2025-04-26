@@ -12,7 +12,7 @@ import { login as apiLogin } from "../services/auth.service";
 import toastr from "toastr";
 
 interface AuthContextType {
-  user: string | null;
+  user: User | null;
   login: (credentials: LoginForm) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
@@ -22,7 +22,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (e) {
         console.error("Failed to parse stored user:", e);
         localStorage.removeItem("user");
+        setUser(null);
       }
     }
     setLoading(false);
@@ -44,14 +45,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { data, message } = await apiLogin(credentials);
 
       if (data?.accessToken) {
-        setUser(credentials.email);
+        const loggedInUser: User = {
+          email: credentials.email,
+          id: 0,
+          username: "",
+        };
+        setUser(loggedInUser); // Set user in the context state
         toastr.success("Đăng nhập thành công!");
-        localStorage.setItem("user", JSON.stringify(credentials.email));
+        localStorage.setItem("user", JSON.stringify(loggedInUser)); // Store user info
         localStorage.setItem("token", data?.accessToken);
-      }else{
+      } else {
         toastr.error(message ? message : "Lỗi không xác định");
       }
-
     } catch (error) {
       console.error("Login failed:", error);
       throw error;
@@ -63,6 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
   };
 
   const isAuthenticated = !!user;
