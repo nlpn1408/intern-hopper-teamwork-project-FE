@@ -1,6 +1,7 @@
 'use client'
 
 import { Save } from 'lucide-react'
+import router from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { ClipLoader, MoonLoader, RingLoader } from 'react-spinners';
 import { toast, Toaster } from 'sonner';
@@ -28,6 +29,10 @@ const initialUser: User = {
 }
 
 export default function ProfilePage() {
+    const [activeSection, setActiveSection] = useState<'profile' | 'password' | 'payment'>('profile');
+    const [isLoading, setIsLoading] = useState(true);
+
+    // local storage mock user
     // localStorage.setItem('mock-user', JSON.stringify({
     //     id: 1,
     //     username: 'leminhtuan',
@@ -36,11 +41,9 @@ export default function ProfilePage() {
     //     role: 1,
     //     createdAt: '2024-01-01T08:00:00Z',
     //     updatedAt: '2024-02-01T08:00:00Z',
-    //     deleted: false
+    //     deleted: false,
     // }))
-    // console.log('Đã lưu lại dữ liệu mock-user ')
-    const [activeSection, setActiveSection] = useState<'profile' | 'password' | 'payment'>('profile');
-    const [isLoading, setIsLoading] = useState(true);
+    // console.log('mock-user', localStorage.getItem('mock-user'))
 
     const [user, setUser] = useState<User>(initialUser)
     const [newUsername, setNewUsername] = useState(user.username)
@@ -51,31 +54,17 @@ export default function ProfilePage() {
 
         if (storedUser) {
             const parsedUser = JSON.parse(storedUser) as User
-            const userId = parsedUser.id
-
-            const fetchUser = async () => {
-                try {
-                    const response = await fetch(`http://localhost:3001/users/${userId}`)
-                    const data = await response.json()
-                    setUser(data)
-                    setNewUsername(data.username)
-                    setNewEmail(data.email)
-                } catch (error) {
-                    console.error('Lỗi khi fetch user:', error)
-                } finally {
-                    setIsLoading(false)
-                }
-            }
-
-            // timeout test
-            setTimeout(() => {
-                fetchUser()
-            }, 1000)
+            setUser(parsedUser)
+            setNewUsername(parsedUser.username)
+            setNewEmail(parsedUser.email)
         } else {
-            setIsLoading(false)
+            toast.error('Không tìm thấy dữ liệu người dùng!')
+            setTimeout(() => {
+                router.push('/login')
+            }, 3000)
         }
+        setIsLoading(false)
     }, [])
-
 
     const handleProfileUpdate = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -87,8 +76,11 @@ export default function ProfilePage() {
             updatedAt: new Date().toISOString()
         }
 
+        console.log('updatedUser', updatedUser)
+        console.log('id', user.id)
+
         try {
-            const res = await fetch(`http://localhost:3001/users/${user.id}`, {
+            const res = await fetch(`http://localhost:3001/api/users/update/${user.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedUser),
