@@ -1,15 +1,14 @@
-"use client";
-
 // src/app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+<<<<<<< HEAD
 import toastr from 'toastr';
-import 'toastr/build/toastr.min.css';
-import { AuthProvider, useAuth } from "@/features/auth/hooks/useAuth";
-import { useRouter, usePathname } from "next/navigation";
-import { useEffect } from "react";
-import Spinner from "@/components/common/Spinner"; // Import the Spinner component
+import 'toastr/build/toastr.min.css'; 
+=======
+import Navbar from '../app/components/Navbar'
+
+>>>>>>> cf434d1 (navbar)
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,28 +20,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-function AuthRedirect({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, loading } = useAuth();
-  const router = useRouter();
-  const pathname = usePathname();
-
-  useEffect(() => {
-    if (!loading) {
-      if (!isAuthenticated && pathname !== '/login' && pathname !== '/register') {
-        router.push('/login');
-      } else if (isAuthenticated && (pathname === '/login' || pathname === '/register' || pathname === '/')) {
-        router.push('/users');
-      }
-    }
-  }, [isAuthenticated, loading, router, pathname]);
-
-  if (loading) {
-    return <Spinner />;
-  }
-
-  return <>{children}</>;
+export const metadata = {
+  title: 'My App',
+  description: 'Ứng dụng quản lý thực tập sinh',
 }
 
+<<<<<<< HEAD
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -51,19 +34,19 @@ export default function RootLayout({
   toastr.options = {
     closeButton: true,
     progressBar: true,
-    positionClass: 'toast-top-right',
-    timeOut: 5000,
+    positionClass: 'toast-top-right', 
+    timeOut: 5000, 
   };
 
+=======
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+>>>>>>> cf434d1 (navbar)
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthProvider>
-          <AuthRedirect>{children}</AuthRedirect>
-        </AuthProvider>
+    <html lang="vi">
+      <body>
+        <Navbar />
+        <main>{children}</main>
       </body>
     </html>
-  );
+  )
 }
