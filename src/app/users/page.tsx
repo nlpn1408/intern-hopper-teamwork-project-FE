@@ -5,112 +5,8 @@ import Form from 'next/form';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 import React, { Usable, useEffect, useState } from 'react';
-
-type User = {
-  id: number;
-  username: string;
-  email: string;
-  password: string;
-  role: number;
-  createdAt: string;
-  updatedAt: string;
-  deleted: boolean;
-};
-
-const data: User[] = [
-  {
-    id: 1,
-    username: 'leminhtuan',
-    email: 'tuan.le@hikari.vn',
-    password: 'hashedpass123',
-    role: 1,
-    createdAt: '2024-01-01T08:00:00Z',
-    updatedAt: '2024-02-01T08:00:00Z',
-    deleted: false,
-  },
-  {
-    id: 2,
-    username: 'phamngoctram',
-    email: 'tram.pham@aurora.tech',
-    password: 'securepwd456',
-    role: 2,
-    createdAt: '2024-01-03T10:30:00Z',
-    updatedAt: '2024-02-05T11:00:00Z',
-    deleted: false,
-  },
-  {
-    id: 3,
-    username: 'quochuy',
-    email: 'huy.nguyen@skyware.io',
-    password: 'skyware321',
-    role: 2,
-    createdAt: '2024-01-05T09:00:00Z',
-    updatedAt: '2024-02-10T09:30:00Z',
-    deleted: false,
-  },
-  {
-    id: 4,
-    username: 'thanhha',
-    email: 'ha.dang@nextwave.vn',
-    password: 'nextpass789',
-    role: 3,
-    createdAt: '2024-01-10T14:15:00Z',
-    updatedAt: '2024-02-15T14:45:00Z',
-    deleted: false,
-  },
-  {
-    id: 5,
-    username: 'hoangnam',
-    email: 'nam.vo@zenlab.co',
-    password: 'zenlab@123',
-    role: 1,
-    createdAt: '2024-01-15T07:20:00Z',
-    updatedAt: '2024-02-20T08:00:00Z',
-    deleted: false,
-  },
-  {
-    id: 6,
-    username: 'maitrinh',
-    email: 'mai.trinh@moneta.dev',
-    password: 'monetapwd456',
-    role: 2,
-    createdAt: '2024-01-20T16:00:00Z',
-    updatedAt: '2024-02-22T17:00:00Z',
-    deleted: false,
-  },
-  {
-    id: 7,
-    username: 'quangdung',
-    email: 'dung.bui@hyperhub.vn',
-    password: 'hyperhubsecure',
-    role: 3,
-    createdAt: '2024-01-25T13:30:00Z',
-    updatedAt: '2024-03-01T14:00:00Z',
-    deleted: false,
-  },
-  {
-    id: 8,
-    username: 'khanhchi',
-    email: 'chi.lam@cosmic.vn',
-    password: 'cosmicstars',
-    role: 1,
-    createdAt: '2024-02-01T10:10:00Z',
-    updatedAt: '2024-03-05T11:30:00Z',
-    deleted: false,
-  },
-];
-
-
-async function fetchUsers(searchTerm = ""): Promise<User[]> {
-  await new Promise((res) => setTimeout(res, 1000));
-  if (searchTerm.trim().length > 0) {
-    return data.filter(user => {
-      return user.username.toLowerCase().includes(searchTerm.toLowerCase()) || user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-  } else {
-    return data;
-  }
-}
+import { User } from '@/features/user/types';
+import { fetchUsers } from '@/features/user/services/user.service';
 
 type SearchParams = {
   query: string;
@@ -154,7 +50,7 @@ export default function UserListPage({ searchParams }: { searchParams: SearchPar
       try {
         setIsLoading(true);
 
-        const users = await fetchUsers("");
+        const users = await fetchUsers();
         setUsers(users);
 
         const filteredUsers = users.filter(user => {
@@ -211,7 +107,7 @@ export default function UserListPage({ searchParams }: { searchParams: SearchPar
           <input
             name="query"
             placeholder="Tìm kiếm theo tên hoặc email..."
-            className="flex-1 placeholder:text-gray-300 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 text-black placeholder:text-gray-300 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="submit"
