@@ -1,55 +1,108 @@
 "use client";
 
 import { useState } from "react";
-import toastr from 'toastr';
-import 'toastr/build/toastr.min.css'; 
-import LoginForm from "../../features/auth/components/LoginForm"; 
-import { LoginForm as LoginFormType } from "../../features/auth/types";
-import { useAuth } from "../../features/auth/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 
-export default function LoginPage() {
-  const { login: authLogin, loading: authLoading } = useAuth(); 
-  const [isSubmitting, setIsSubmitting] = useState(false); 
+const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleLogin = async (data: LoginFormType) => {
-    setIsSubmitting(true);
+  const router = useRouter();
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setError("Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
     try {
-      await authLogin(data);
+      const response = await fetch("http://localhost:3001/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Đăng nhập thất bại");
+      }
+
+      const data = await response.json();
+      const { accessToken } = data.data;
+
+      localStorage.setItem("token", accessToken);
+      toast.success(" Đăng nhập thành công!");
+
+      router.push("/");
     } catch (error: any) {
-      console.error("Login failed:", error);
-      toastr.error(error.message || "Đăng nhập thất bại");
+      setError(error.message);
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
-  const isLoading = authLoading || isSubmitting;
-
   return (
-    <div className="relative h-screen flex items-center justify-center">
-      <div
-        className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat bg-fixed"
-        style={{ backgroundImage: "url('/images/register/bg.jpg')" }} 
-      />
-      <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50" />
-      <div className="relative w-full">
-        <div className="max-w-11/12 lg:max-w-md md:max-w-md mx-auto bg-white p-10 rounded-xl shadow-md">
-          <h1 className="text-2xl font-bold text-center mb-6">ĐĂNG NHẬP</h1>
+    <>
+      <Toaster position="top-center" reverseOrder={false} />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100">
+        <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8">
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Đăng nhập</h2>
+          <p className="text-sm text-center text-gray-500 mb-4">Nhập email và mật khẩu để tiếp tục</p>
 
-          <LoginForm onSubmit={handleLogin} isSubmitting={isLoading} />
+          {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
-          <div className="text-center mt-4 text-sm text-gray-600">
-            Bạn chưa có tài khoản?{" "}
-            <a href="/register" className="text-blue-600 underline">
-              Đăng ký ngay
+          <div className="space-y-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="password"
+              placeholder="Mật khẩu"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            <button
+              onClick={handleLogin}
+              disabled={loading}
+              className={`w-full py-2 rounded-xl font-semibold transition ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
+              }`}
+            >
+              {loading ? "⏳ Đang đăng nhập..." : "ĐĂNG NHẬP"}
+            </button>
+          </div>
+
+          <div className="mt-6 text-center text-sm text-gray-500 space-y-2">
+            <a href="/dangky" className="hover:underline text-blue-600">
+              Khách hàng mới? <span className="font-medium">Tạo tài khoản</span>
             </a>
-            <br />
-            <a href="/forgot-password" className="text-blue-600 underline">
-              Quên mật khẩu? Khôi phục mật khẩu
-            </a>
+            <p>
+              Quên mật khẩu?{" "}
+              <a href="#" className="text-blue-600 hover:underline">
+                Khôi phục mật khẩu
+              </a>
+            </p>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
-}
+};
+
+export default LoginPage
